@@ -7,31 +7,45 @@ import { ShoppingListItem } from '../shopping-list-item/ShoppingListItem';
 import {useEffect, useState} from 'react';
 import { Content, Button, Text, Right, Form, Grid, Col } from 'native-base';
 // import { toggleEditAction, deleteShoppingListItemAction, toggleDeleteDialogAction } from '../../../core/redux/actions/shopping-list-actions/actions';
+import { fetchShoppingListAction, toggleEditAction } from "../../../core/redux/actions/shopping-list-actions/actions";
 import Dialog, { DialogFooter, DialogButton, DialogContent, DialogTitle, ScaleAnimation } from 'react-native-popup-dialog';
+import { openDBAction, closeDBAction } from "../../../core/redux/actions/db-actions/actions";
 
 
 
 
 export const ShoppingList = ({ navigation }) =>{
     
-    // const shoppingList = useSelector(state=> state.shoppingListReducer.shoppingList);
-    // const itemToDelete = useSelector(state=> state.shoppingListReducer.itemToDelete);
-    // const dispatch = useDispatch();
+    const shoppingList = useSelector(state=> state.shoppingListReducer.shoppingList);
+    const itemToDelete = useSelector(state=> state.shoppingListReducer.itemToDelete);
+    const dispatch = useDispatch();
     
 
-    const [shoppingList, setshoppingList] = useState([]);
-    const [itemToDelete, setitemToDelete] = useState(undefined);
+    const db = useSelector(state=> state.dbReducer.database);
+    const dbReady = useSelector(state => state.dbReducer.dbReady)
+
     const [deletePopUpVisible, setDeletePopUpVisible] = useState(false);
 
 
     useEffect(() => {
+        dispatch(openDBAction());
+
+        if(dbReady){
+            dispatch(fetchShoppingListAction())
+        }
         if(deletePopUpVisible && !itemToDelete){
             setDeletePopUpVisible(false);
         }
         if(!deletePopUpVisible && itemToDelete){
             setDeletePopUpVisible(true);
         }
-    }, [itemToDelete, deletePopUpVisible, setDeletePopUpVisible]);
+
+        return () => {
+            if(dbReady){
+                dispatch(closeDBAction());
+            }
+        }
+    }, [itemToDelete, deletePopUpVisible, dispatch, setDeletePopUpVisible, dbReady]);
 
     const createSections=()=>{
         const bought = shoppingList.filter(item=>item.bought);
@@ -62,7 +76,8 @@ export const ShoppingList = ({ navigation }) =>{
     }
     
     const toggleEdit= ()=>{
-        // dispatch(toggleEditAction());
+        console.log("Toggling edit");
+        dispatch(toggleEditAction());
     }
 
     return(
@@ -84,7 +99,7 @@ export const ShoppingList = ({ navigation }) =>{
                 </Right>
                 <SectionList
                 sections={createSections()}
-                keyExtractor={(item)=>item.id}
+                keyExtractor={(item)=>item.ID}
                 renderItem={({item})=><ShoppingListItem item={item} navigation={navigation}/>}
                 renderSectionHeader={({section:{title}})=>(<Text>{title}</Text>)}
                 />

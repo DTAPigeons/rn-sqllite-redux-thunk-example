@@ -1,0 +1,1 @@
+export const FETCH_CATALOG = 'FETCH_CATALOG';

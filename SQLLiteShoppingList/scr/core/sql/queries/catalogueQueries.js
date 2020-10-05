@@ -1,0 +1,1 @@
+export const getCatalogueItemsQuery = 'SELECT Catalogue.ID, Catalogue.NAME FROM Catalogue';
