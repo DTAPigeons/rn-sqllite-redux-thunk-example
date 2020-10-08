@@ -20,15 +20,13 @@ export const ShoppingList = ({ navigation }) =>{
     const itemToDelete = useSelector(state=> state.shoppingListReducer.itemToDelete);
     const dispatch = useDispatch();
     
-
-    const db = useSelector(state=> state.dbReducer.database);
-    const dbReady = useSelector(state => state.dbReducer.dbReady)
+    const dbReady = useSelector(state => state.dbReducer.dbReady);
 
     const [deletePopUpVisible, setDeletePopUpVisible] = useState(false);
 
 
     useEffect(() => {
-        dispatch(openDBAction());
+
 
         if(dbReady){
             dispatch(fetchShoppingListAction())
@@ -38,12 +36,6 @@ export const ShoppingList = ({ navigation }) =>{
         }
         if(!deletePopUpVisible && itemToDelete){
             setDeletePopUpVisible(true);
-        }
-
-        return () => {
-            if(dbReady){
-                dispatch(closeDBAction());
-            }
         }
     }, [itemToDelete, deletePopUpVisible, dispatch, setDeletePopUpVisible, dbReady]);
 

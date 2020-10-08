@@ -3,41 +3,51 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Header, Content, Card, CardItem, Text, Body, CheckBox, Left, Right, Button, Grid, Col } from "native-base";
 import {CatalogItem} from '../catalog-item/CatalogItem';
+import { fetchCatalogAction } from "../../../core/redux/actions/catalog-actions/actions";
 //import {itemSelectedAction, updateListItemAction, selectItemFromDataBaseAction, cleareUpdateItemAction} from '../../../core/redux/actions/update-list-item-actions/actions';
 import { TextInput } from 'react-native';
 
 export const UpdateShoppingItem=({route, navigation})=>{
-    // const dispatch = useDispatch();
-    // const catalog = useSelector(state=> state.catalogReducer.catalog);
-    // const selectedItem = useSelector(state => state.updateListItemReducer.selectedItem);
-    // const updated = useSelector(state => state.updateListItemReducer.updated);
+    const dispatch = useDispatch();
+    const catalog = useSelector(state=> state.catalogReducer.catalog);
+    const dbReady = useSelector(state => state.dbReducer.dbReady);
+   const selectedItem = useSelector(state => state.updateListItemReducer.selectedItem);
+   const updated = useSelector(state => state.updateListItemReducer.updated);
 
-    const [catalog, setcatalog] = useState([]);
-    const [selectedItem, setselectedItem] = useState(undefined);
+    // const [catalog, setcatalog] = useState([]);
+    // const [selectedItem, setselectedItem] = useState(undefined);
 
     const [statusMessage, setStatusMessage] = useState("");
     const [selectedFromDatabse, setselectedFromDatabse] = useState(false);
-    const [updated, setupdated] = useState(undefined);
+    // const [updated, setupdated] = useState(undefined);
 
-    useEffect(() => {
-        if(route.params && !updated){
-            const {id} = route.params;
 
-            // if(id && !selectedItem.id && !selectedFromDatabse){
-            //     console.log("selected: "+selectedItem.name+"id: "+selectedItem.id+"need to select: "+id);
-            //     dispatch(selectItemFromDataBaseAction(id));
-            //     setselectedFromDatabse(true);
-            // }
+    useEffect(()=>{
+        if(dbReady){
+            dispatch(fetchCatalogAction());
+
         }
+    },[dispatch, dbReady]);
 
-        return function cleanUp(){
-            if(updated){
-                onCancel();
-            }
+    // useEffect(() => {
+    //     if(route.params && !updated){
+    //         const {id} = route.params;
+
+    //         // if(id && !selectedItem.id && !selectedFromDatabse){
+    //         //     console.log("selected: "+selectedItem.name+"id: "+selectedItem.id+"need to select: "+id);
+    //         //     dispatch(selectItemFromDataBaseAction(id));
+    //         //     setselectedFromDatabse(true);
+    //         // }
+    //     }
+
+    //     return function cleanUp(){
+    //         if(updated){
+    //             onCancel();
+    //         }
                 
             
-        };
-    }, [route.params, selectedItem,onCancel,console.log, dispatch,]);
+    //     };
+    // }, [route.params, selectedItem,onCancel,console.log, dispatch,]);
 
     const onPress=(item)=>{
         // console.log("selecting "+item.name);
@@ -61,6 +71,11 @@ export const UpdateShoppingItem=({route, navigation})=>{
         // dispatch(cleareUpdateItemAction());
         navigation.popToTop();
     }
+
+    const renderCatalogue= () =>{
+        return catalog.map(item=><CatalogItem item={item} onPress={onPress} key={item.ID}/>)
+    }
+
     return(
 
         <Content>
@@ -87,7 +102,7 @@ export const UpdateShoppingItem=({route, navigation})=>{
             <Text>
             Chose product from catalog
             </Text>
-            {catalog.map(item=><CatalogItem item={item} onPress={onPress} key={item.id}/>)}
+            {renderCatalogue()}
         </Content>
     )
 }

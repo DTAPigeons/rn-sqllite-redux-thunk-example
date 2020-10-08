@@ -7,7 +7,7 @@ const initialState = {
 export function catalogReducer(state = initialState, action){
     switch(action.type){
         case FETCH_CATALOG:
-            return {...state, catalog: action.payload};
+            return {...state, catalog: action.payload.catalogue};
         default:
             return state;
     }

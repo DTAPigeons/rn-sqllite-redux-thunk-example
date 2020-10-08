@@ -19,10 +19,7 @@ const App = ()  => {
     <>
     <Provider store={store}>
     <NavigationContainer>
-                <Stack.Navigator initialRouteName="List">
-                    <Stack.Screen name="List" component={ShoppingList} options={{ title: 'Shopping List' }}></Stack.Screen>
-                    <Stack.Screen name="Update" component={UpdateShoppingItemClass} options={{ title: 'Update Item' }}></Stack.Screen>
-                </Stack.Navigator>
+      <DBWrapper/>
     </NavigationContainer>
     </Provider>
     </>
