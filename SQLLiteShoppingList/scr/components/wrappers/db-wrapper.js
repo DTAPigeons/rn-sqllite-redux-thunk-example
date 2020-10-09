@@ -15,8 +15,7 @@ export const DBWrapper = () =>{
     useEffect(() => {
         dispatch(openDBAction());
         return () => {
-            console.log("closing");
-            //dispatch(closeDBAction());
+            dispatch(closeDBAction());
         }
     }, [dispatch]);
 

@@ -1,25 +1,29 @@
 import * as types from '../actions/update-list-item-actions/action-types';
 
 const initialState = {
-    selectedItem : { name: "", bought: false},
-    updated: false,
-    catalogToggled: false
+  selectedItem: {name: '', bought: 0},
+  updated: false,
+  catalogToggled: false,
 };
 
-export function updateListItemReducer(state = initialState, action){
-    
-    const {type, payload} = action;
+export function updateListItemReducer(state = initialState, action) {
+  const {type, payload} = action;
 
-    switch(type){
-        case types.ITEM_SELECTED:
-            return {...state, selectedItem : payload};
-        case types.TOGGLE_CATALOG:
-            return {...state, catalogToggled: !state.catalogToggled};
-        default:
-            return state;
-    }
+  switch (type) {
+    case types.ITEM_SELECTED:
+      return {...state, selectedItem: payload};
+    case types.TOGGLE_CATALOG:
+      return {...state, catalogToggled: !state.catalogToggled};
+    case types.UPDATE_LIST_ITEM_SUCCESS:
+      console.log('Updating success');
+      return {...state, updated: true};
+    case types.CLEARE_UPDATE_ITEM:
+      return {...state, ...initialState};
+    default:
+      return state;
+  }
 
-    /*switch(action.type){
+  /*switch(action.type){
         case ITEM_SELECTED:
             return {...state, selectedItem : action.payload};
         case UPDATE_LIST_ITEM_SUCCESS:
