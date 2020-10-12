@@ -19,6 +19,8 @@ export function updateListItemReducer(state = initialState, action) {
       return {...state, updated: true};
     case types.CLEARE_UPDATE_ITEM:
       return {...state, ...initialState};
+    case types.SELECT_ITEM_FROM_DATA_BASE:
+      return {...state, selectedItem: action.payload};
     default:
       return state;
   }

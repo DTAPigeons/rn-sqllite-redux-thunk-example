@@ -18,7 +18,12 @@ import {
 } from 'native-base';
 import {CatalogItem} from '../catalog-item/CatalogItem';
 import {fetchCatalogAction} from '../../../core/redux/actions/catalog-actions/actions';
-import {itemSelectedAction, updateListItemAction, cleareUpdateItemAction} from '../../../core/redux/actions/update-list-item-actions/actions';
+import {
+  itemSelectedAction,
+  updateListItemAction,
+  cleareUpdateItemAction,
+  selectItemFromDataBaseAction,
+} from '../../../core/redux/actions/update-list-item-actions/actions';
 import {TextInput} from 'react-native';
 
 export const UpdateShoppingItem = ({route, navigation}) => {
@@ -43,28 +48,32 @@ export const UpdateShoppingItem = ({route, navigation}) => {
     }
   }, [dispatch, dbReady]);
 
-  // useEffect(() => {
-  //     if(route.params && !updated){
-  //         const {id} = route.params;
+  useEffect(() => {
+    if (route.params && !updated) {
+      const {id} = route.params;
 
-  //         // if(id && !selectedItem.id && !selectedFromDatabse){
-  //         //     console.log("selected: "+selectedItem.name+"id: "+selectedItem.id+"need to select: "+id);
-  //         //     dispatch(selectItemFromDataBaseAction(id));
-  //         //     setselectedFromDatabse(true);
-  //         // }
-  //     }
+      if (id && !selectedItem.id && !selectedFromDatabse) {
+        dispatch(selectItemFromDataBaseAction(id));
+        setselectedFromDatabse(true);
+      }
+    }
 
-  //     return function cleanUp(){
-  //         if(updated){
-  //             onCancel();
-  //         }
+    return function cleanUp() {
+      if (updated) {
+        onCancel();
+      }
+    };
+  }, [route.params, selectedItem, onCancel, console.log, dispatch]);
 
-  //     };
-  // }, [route.params, selectedItem,onCancel,console.log, dispatch,]);
-
-  const onPress = (item) => {
-    console.log('selecting ' + item);
-    dispatch(itemSelectedAction({CATALOGUEID: item.ID, name: item.name}));
+  const onPress = (catalogueItem) => {
+    console.log('selecting ' + catalogueItem);
+    dispatch(
+      itemSelectedAction({
+        ...selectedItem,
+        CATALOGUEID: catalogueItem.ID,
+        name: catalogueItem.name,
+      }),
+    );
   };
 
   const onInputChange = (text) => {
@@ -73,9 +82,9 @@ export const UpdateShoppingItem = ({route, navigation}) => {
   };
 
   const onSubmit = () => {
-    if(!selectedItem|| !selectedItem.name || selectedItem.name==""){
-        setStatusMessage("Invalid Item");
-        return;
+    if (!selectedItem || !selectedItem.name || selectedItem.name == '') {
+      setStatusMessage('Invalid Item');
+      return;
     }
     dispatch(updateListItemAction(selectedItem));
   };
@@ -96,7 +105,7 @@ export const UpdateShoppingItem = ({route, navigation}) => {
       {updated && onCancel()}
       <Text>{statusMessage}</Text>
       <TextInput
-        editable = {false}
+        editable={false}
         onChangeText={(text) => onInputChange(text)}
         value={selectedItem.name}
       />

@@ -2,6 +2,7 @@ import * as types from './action-types';
 import {getShoppingItemsQuery} from '../../../sql/queries/shoppingItemQueries';
 import {getShoppingItemFromData} from '../../../sql/data-processors/data-processor';
 import {deleteShoppingItemQuery} from '../../../sql/queries/shoppingItemQueries';
+import {executeUpdateQuery} from '../util';
 
 export const fetchShoppingListAction = () => {
   return async (dispath, getState) => {
@@ -55,12 +56,27 @@ export function deleteShoppingListItemAction(item) {
         console.log(error);
       });
   };
-
-  //   return {
-  //     type: types.DELECT_SHOPPING_LIST_ITEM,
-  //     payload: item,
-  //   };
 }
+
+export function toggleItemBoughtStatusAction(item) {
+  return async (dispatch, getState) => {
+    const database = getState().dbReducer.database;
+
+    item.bought = !item.bought;
+
+    executeUpdateQuery(database, item)
+      .then((result) => {
+        dispatch({
+          type: types.SWITCH_ITEM_BOUGHT_STATUS,
+          payload: {...item},
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+}
+
 /*
 
 

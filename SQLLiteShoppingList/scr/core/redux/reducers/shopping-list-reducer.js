@@ -18,9 +18,17 @@ export function shoppingListReducer(state = initialState, action) {
     }
     case types.DELECT_SHOPPING_LIST_ITEM: {
       const filteredList = state.shoppingList.filter((item) => {
-        item.ID === payload.ID;
+        return item.ID === payload.ID;
       });
       return {...state, shoppingList: filteredList, itemToDelete: undefined};
+    }
+    case types.SWITCH_ITEM_BOUGHT_STATUS: {
+      const changedList = [...state.shoppingList];
+      const changedIndex = changedList.findIndex((item) => {
+        return item.ID === payload.ID;
+      });
+      changedList[changedIndex] = {...payload};
+      return {...state, shoppingList: changedList};
     }
     default:
       return state;

@@ -1,6 +1,8 @@
 import * as actionTypes from './action-types';
 //import {createDatabaseEntryFromItem} from '../../../firebase/data/item-factory';
-import {insertShoppingItemQuery} from '../../../sql/queries/shoppingItemQueries';
+import {executeUpdateQuery} from '../util';
+import {getShoppingItemByIDQuery} from '../../../sql/queries/shoppingItemQueries';
+import {getShoppingItemFromData} from '../../../sql/data-processors/data-processor';
 
 export function itemSelectedAction(item) {
   return {
@@ -12,13 +14,12 @@ export function itemSelectedAction(item) {
 export function updateListItemAction(item) {
   return async (dispatch, getState) => {
     const database = getState().dbReducer.database;
-
-    database
-      .executeQuery(insertShoppingItemQuery, [item.CATALOGUEID, 0])
+    executeUpdateQuery(database, item)
       .then((result) => {
         console.log(result);
         dispatch({
           type: actionTypes.UPDATE_LIST_ITEM_SUCCESS,
+          payload: item,
         });
       })
       .catch((error) => {
@@ -26,13 +27,30 @@ export function updateListItemAction(item) {
       });
   };
 }
-        
+
 export function cleareUpdateItemAction() {
   return {
     type: actionTypes.CLEARE_UPDATE_ITEM,
   };
 }
 
+export function selectItemFromDataBaseAction(id) {
+  return async (dispatch, getState) => {
+    const database = getState().dbReducer.database;
+    database
+      .executeQuery(getShoppingItemByIDQuery, [id])
+      .then((result) => {
+        const data = result[0];
+        dispatch({
+          type: actionTypes.SELECT_ITEM_FROM_DATA_BASE,
+          payload: getShoppingItemFromData(data),
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+}
 /*
 
 
