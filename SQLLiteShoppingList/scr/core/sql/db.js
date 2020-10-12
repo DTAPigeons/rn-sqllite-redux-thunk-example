@@ -33,7 +33,7 @@ export class DataBase {
             let items = [];
             let data = result.rows;
 
-            let resultLength = data.length? data.length : result.rowsAffected; 
+            let resultLength = data.length ? data.length : result.rowsAffected;
 
             for (let i = 0; i < resultLength; i++) {
               items.push({...data.item(i)});
