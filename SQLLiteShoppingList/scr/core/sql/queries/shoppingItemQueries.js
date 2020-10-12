@@ -4,3 +4,5 @@ export const getShoppingItemsQuery =
 
 export const insertShoppingItemQuery =
   'INSERT INTO ShoppingList (CATALOGUEID, BOUGHT) VALUES (?,?)';
+
+export const deleteShoppingItemQuery = 'DELETE FROM ShoppingList WHERE id = ?';

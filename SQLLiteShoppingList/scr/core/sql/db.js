@@ -14,7 +14,9 @@ export class DataBase {
         location: 'default',
         createFromLocation: '~www/sqldb.db',
       },
-      () => {},
+      () => {
+        SQLite.DEBUG = true;
+      },
     );
   }
 

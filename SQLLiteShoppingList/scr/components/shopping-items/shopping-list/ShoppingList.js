@@ -8,6 +8,8 @@ import {Content, Button, Text, Right, Form, Grid, Col} from 'native-base';
 import {
   fetchShoppingListAction,
   toggleEditAction,
+  deleteShoppingListItemAction,
+  toggleDeleteDialogAction,
 } from '../../../core/redux/actions/shopping-list-actions/actions';
 import Dialog, {
   DialogFooter,
@@ -78,13 +80,13 @@ export const ShoppingList = ({navigation}) => {
   };
 
   const onDelete = () => {
-    // if(itemToDelete){
-    //     dispatch(deleteShoppingListItemAction(itemToDelete));
-    // }
+    if (itemToDelete) {
+      dispatch(deleteShoppingListItemAction(itemToDelete));
+    }
   };
 
   const onDeleteCancel = () => {
-    // dispatch(toggleDeleteDialogAction())
+    dispatch(toggleDeleteDialogAction());
   };
 
   const toggleEdit = () => {
